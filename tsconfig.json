@@ -1,0 +1,13 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/types" },
+    { "path": "./packages/engine" },
+    { "path": "./packages/worlds" },
+    { "path": "./packages/rulebook" },
+    { "path": "./packages/storage" },
+    { "path": "./packages/prompts" },
+    { "path": "./packages/tools" },
+    { "path": "./packages/mcp-server" }
+  ]
+}

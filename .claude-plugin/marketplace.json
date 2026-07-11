@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "mythx-plugins",
+  "description": "MythX Engine plugins — RPG world building, gameplay, and AI game mastering",
+  "owner": {
+    "name": "MythX Engine",
+    "email": "support@mythxengine.com"
+  },
+  "plugins": [
+    {
+      "name": "rpg",
+      "description": "RPG World Builder — Full tabletop RPG experience with parallel world generation, AI companions, GM-driven gameplay, combat, and book generation.",
+      "author": {
+        "name": "MythX Engine"
+      },
+      "source": "./world-builder",
+      "category": "entertainment"
+    }
+  ]
+}

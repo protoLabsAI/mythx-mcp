@@ -1,0 +1,1 @@
+blurry, smooth, photorealistic, 3d render, anti-aliased, gradient, noise, grain, watermark, text, signature, low quality, character, hand holding, busy background, cropped, frame, border, UI, inventory, grid, slot, sprite sheet, multiple items, multiple objects, variations, concept sheet, tiled, repeating pattern, shelf, wall, room, scene

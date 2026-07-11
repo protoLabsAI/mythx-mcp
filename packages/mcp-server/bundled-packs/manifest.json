@@ -1,0 +1,47 @@
+{
+  "$schema": "./manifest.schema.json",
+  "version": "0.1.0",
+  "generatedAt": "2026-05-04T22:05:19.802Z",
+  "packs": [
+    {
+      "id": "world:bundled-port-miriam",
+      "slug": "port-miriam",
+      "name": "Port Miriam",
+      "tagline": "The rain washes nothing clean.",
+      "tone": "Cynical but not hopeless; moral ambiguity is the weather. Heavy, damp, weary, with moments of sharp clarity.",
+      "tier": "medium",
+      "seedFile": "seeds/port-miriam.seed.md",
+      "packFile": "packs/port-miriam.world.json"
+    },
+    {
+      "id": "world:bundled-aethelgard",
+      "slug": "aethelgard",
+      "name": "The Ashen Sovereignty of Aethelgard",
+      "tagline": "A kingdom of ghosts defending a throne that no longer exists.",
+      "tone": "Elegiac, weary, reverent, quietly desperate.",
+      "tier": "medium",
+      "seedFile": "seeds/aethelgard.seed.md",
+      "packFile": "packs/aethelgard.world.json"
+    },
+    {
+      "id": "world:bundled-threshold-deep",
+      "slug": "threshold-deep",
+      "name": "Meridian Anchorage",
+      "tagline": "The last refueling stop before the silence eats you.",
+      "tone": "Claustrophobic, paranoid, melancholic, slow-burning dread.",
+      "tier": "medium",
+      "seedFile": "seeds/threshold-deep.seed.md",
+      "packFile": "packs/threshold-deep.world.json"
+    },
+    {
+      "id": "world:bundled-treehouse-anthology",
+      "slug": "treehouse-anthology",
+      "name": "Yellow Hollow",
+      "tagline": "A pristine suburb where the storm drains bleed ink and every favor comes with an interest rate.",
+      "tone": "Eerie yet wistful, punctuated by sudden drops into slapstick chaos or quiet cosmic dread, always anchored by warm, familiar lighting.",
+      "tier": "medium",
+      "seedFile": "seeds/treehouse-anthology.seed.md",
+      "packFile": "packs/treehouse-anthology.world.json"
+    }
+  ]
+}

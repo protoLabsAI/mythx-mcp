@@ -1,0 +1,62 @@
+{
+  "name": "@mythxengine/tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Transport-agnostic shared tools for RPG MCP",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./adapters": {
+      "types": "./dist/adapters/index.d.ts",
+      "import": "./dist/adapters/index.js",
+      "default": "./dist/adapters/index.js"
+    },
+    "./context": {
+      "types": "./dist/context/index.d.ts",
+      "import": "./dist/context/index.js",
+      "default": "./dist/context/index.js"
+    },
+    "./events": {
+      "types": "./dist/events/index.d.ts",
+      "import": "./dist/events/index.js",
+      "default": "./dist/events/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@mythxengine/engine": "workspace:*",
+    "@mythxengine/prompts": "workspace:*",
+    "@mythxengine/rulebook": "workspace:*",
+    "@mythxengine/types": "workspace:*",
+    "@mythxengine/worlds": "workspace:*",
+    "lodash-es": "^4.17.21",
+    "zod": "^3.24.0",
+    "zod-to-json-schema": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.16",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^22.19.11",
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}

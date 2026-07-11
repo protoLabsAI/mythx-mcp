@@ -1,0 +1,30 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist/
+*.tsbuildinfo
+*.tgz
+*.mcpb
+
+# Generated at pack time (tsup prepack copies these into the package)
+packages/mcp-server/skills/
+
+# Runtime data
+data/
+
+# Environment
+.env
+.env.*
+
+# Turbo
+.turbo/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Test artifacts
+coverage/

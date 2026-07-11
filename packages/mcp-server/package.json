@@ -1,0 +1,84 @@
+{
+  "name": "@mythxengine/mcp-server",
+  "version": "0.2.0",
+  "private": false,
+  "description": "MythxEngine MCP server — tabletop RPG game mechanics over the Model Context Protocol: dice, five-tier outcomes, FitD-style stress, combat tracking, clocks, investigations, world generation, and four bundled starter worlds.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "rpg",
+    "tabletop",
+    "ttrpg",
+    "game-master",
+    "dice",
+    "claude"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/protoLabsAI/mythx-mcp.git",
+    "directory": "packages/mcp-server"
+  },
+  "mcpName": "io.github.protolabsai/mythxengine",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "bin": {
+    "mythxengine": "./dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./state": {
+      "types": "./dist/state/index.d.ts",
+      "import": "./dist/state/index.js",
+      "default": "./dist/state/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "bundled-packs/manifest.json",
+    "bundled-packs/packs",
+    "bundled-packs/README.md",
+    "skills",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:publish": "tsup",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepack": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist skills"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "lodash-es": "^4.17.21",
+    "zod": "^3.24.0",
+    "zod-to-json-schema": "^3.23.0"
+  },
+  "devDependencies": {
+    "@mythxengine/engine": "workspace:*",
+    "@mythxengine/prompts": "workspace:*",
+    "@mythxengine/rulebook": "workspace:*",
+    "@mythxengine/storage": "workspace:*",
+    "@mythxengine/tools": "workspace:*",
+    "@mythxengine/types": "workspace:*",
+    "@mythxengine/worlds": "workspace:*",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}

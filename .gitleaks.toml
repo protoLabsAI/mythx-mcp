@@ -1,0 +1,17 @@
+# gitleaks config for the mythx-mcp public repo.
+#
+# Shipped by the private repo's export script (scripts/export-public.sh),
+# which runs `gitleaks detect --no-git` over every export as a release gate,
+# and doubles as this repo's own scanning config from day one.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Uncommitted build artifacts and lockfile resolution hashes"
+paths = [
+  '''node_modules/''',
+  '''(^|/)dist/''',
+  '''\.turbo/''',
+  '''pnpm-lock\.yaml''',
+]

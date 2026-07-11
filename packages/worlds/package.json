@@ -1,0 +1,38 @@
+{
+  "name": "@mythxengine/worlds",
+  "version": "0.1.0",
+  "private": true,
+  "description": "World content generation and schemas for RPG MCP",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "import": "./dist/schema/index.js",
+      "default": "./dist/schema/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@mythxengine/types": "workspace:*",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.0"
+  }
+}

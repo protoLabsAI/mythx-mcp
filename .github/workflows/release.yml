@@ -1,0 +1,93 @@
+name: Release
+
+# Tag `v<version>` (matching packages/mcp-server/package.json) to:
+#   1. verify the tag matches the package version (fail-fast, before any setup)
+#   2. build + test the workspace
+#   3. pack the npm tarball and assemble the Claude Desktop .mcpb bundle
+#      (scripts/build-mcpb.mjs) — every artifact is built BEFORE anything
+#      is published, so a bundling failure can't leave npm half-released
+#   4. publish @mythxengine/mcp-server to npm (provenance, public)
+#   5. attach the .mcpb + the npm tarball to a GitHub Release
+#
+# Fresh-repo setup (one time): create an npm automation token with publish
+# access to the @mythxengine scope and add it as the NPM_TOKEN Actions
+# secret. Nothing else — provenance uses the workflow's OIDC id-token, and
+# the Release is created with the default GITHUB_TOKEN.
+#
+# After the release, update server.json's mcpb entry: set the release-asset
+# URL and paste the fileSha256 printed in the "Build .mcpb bundle" step (also
+# saved as the mcpb-sha256 output file attached below), then republish the
+# registry listing with mcp-publisher.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write # create the GitHub Release
+  id-token: write # npm --provenance
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Fail fast, before toolchain setup or install.
+      - name: Verify tag matches package version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(jq -r .version packages/mcp-server/package.json)"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "tag v$TAG_VERSION does not match packages/mcp-server version $PKG_VERSION" >&2
+            echo "bump packages/mcp-server/package.json (via a fresh export) or retag" >&2
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v4
+        # version comes from the root package.json "packageManager" field
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install
+        run: pnpm install --frozen-lockfile || pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+      # pnpm pack rewrites workspace:* versions and runs prepack (the tsup
+      # publish bundle that inlines all @mythxengine/* workspace deps), so
+      # the published artifact is self-contained. Run from the package dir:
+      # `pnpm --filter X pack` is not supported on pnpm 9 (pack has no
+      # recursive mode).
+      - name: Pack npm tarball
+        run: |
+          mkdir -p release-artifacts
+          (cd packages/mcp-server && pnpm pack --pack-destination "$GITHUB_WORKSPACE/release-artifacts")
+
+      - name: Build .mcpb bundle
+        run: |
+          node scripts/build-mcpb.mjs --out release-artifacts
+          sha256sum release-artifacts/*.mcpb | tee release-artifacts/mcpb-sha256.txt
+
+      # Everything is built; publishing starts here.
+      - name: Publish to npm
+        run: npm publish release-artifacts/*.tgz --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/*.mcpb
+            release-artifacts/*.tgz
+            release-artifacts/mcpb-sha256.txt
+          generate_release_notes: true

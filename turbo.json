@@ -1,0 +1,32 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "package.json", "tsconfig.json", "tsup.config.*", "vitest.config.*"],
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "package.json", "vitest.config.*", "tsconfig.json"],
+      "outputs": []
+    },
+    "@mythxengine/prompts#test": {
+      "dependsOn": ["^build", "build"],
+      "inputs": ["src/**", "package.json", "vitest.config.*", "tsconfig.json"],
+      "outputs": []
+    },
+    "lint": {
+      "inputs": ["src/**", "package.json", "eslint.config.*"],
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "package.json", "tsconfig.json"],
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

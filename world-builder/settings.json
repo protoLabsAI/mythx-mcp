@@ -1,0 +1,18 @@
+{
+  "defaultAgent": {
+    "model": "claude-sonnet-4-6",
+    "description": "Default model for world-builder agents"
+  },
+  "contentGenerator": {
+    "model": "claude-sonnet-4-6",
+    "description": "Model used for parallel world content generation subagents"
+  },
+  "bookGenerator": {
+    "model": "claude-sonnet-4-6",
+    "description": "Model used for generating print-ready books"
+  },
+  "playerResearcher": {
+    "model": "claude-haiku-4-5-20251001",
+    "description": "Model used for player-facing research (no spoilers, fast lookups)"
+  }
+}

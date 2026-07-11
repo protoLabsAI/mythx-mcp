@@ -1,0 +1,47 @@
+{
+  "name": "@mythxengine/rulebook",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Structured rulebook — chapter/section/entry schema, content, and helpers; powers the in-app GM/player guide and serves as the canonical specification of the engine's mechanics.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "import": "./dist/schema/index.js",
+      "default": "./dist/schema/index.js"
+    },
+    "./content": {
+      "types": "./dist/content/index.d.ts",
+      "import": "./dist/content/index.js",
+      "default": "./dist/content/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@mythxengine/types": "workspace:*",
+    "@mythxengine/worlds": "workspace:*",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}
