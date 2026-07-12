@@ -31,7 +31,7 @@
       "registryType": "mcpb",
       "identifier": "https://github.com/protoLabsAI/mythx-mcp/releases/download/v0.2.0/mythxengine-0.2.0.mcpb",
       "version": "0.2.0",
-      "fileSha256": "REPLACE_WITH_SHA256_FROM_RELEASE",
+      "fileSha256": "bce7a0a4b00f99677b35eab2c56780ce316f85e76f511aeaebd3bc8e71960070",
       "transport": {
         "type": "stdio"
       }
