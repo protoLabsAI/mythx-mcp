@@ -84,7 +84,7 @@ jobs:
             echo "::error::ACTIONS_ID_TOKEN_REQUEST_URL is empty — id-token: write not granted (org policy?)" >&2
             exit 1
           fi
-          echo "OIDC request URL present.
+          echo "OIDC request URL present."
 
       - name: Install
         run: pnpm install --frozen-lockfile || pnpm install
