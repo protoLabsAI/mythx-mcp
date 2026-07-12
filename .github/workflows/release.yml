@@ -9,10 +9,19 @@ name: Release
 #   4. publish @mythxengine/mcp-server to npm (provenance, public)
 #   5. attach the .mcpb + the npm tarball to a GitHub Release
 #
-# Fresh-repo setup (one time): create an npm automation token with publish
-# access to the @mythxengine scope and add it as the NPM_TOKEN Actions
-# secret. Nothing else — provenance uses the workflow's OIDC id-token, and
-# the Release is created with the default GITHUB_TOKEN.
+# Fresh-repo setup (one time): configure a TRUSTED PUBLISHER for
+# @mythxengine/mcp-server on npmjs.com (package → Settings → Trusted
+# Publisher): GitHub Actions, repository protoLabsAI/mythx-mcp, workflow
+# filename release.yml, environment blank, allowed actions "npm publish".
+# ZERO repo secrets — the publish
+# authenticates via the workflow's OIDC id-token, provenance comes with it,
+# and the Release is created with the default GITHUB_TOKEN.
+#
+# Why not an npm token: GitHub deprecated 2FA-bypass granular access tokens
+# (changelog 2026-07-08) — they lose sensitive operations Aug 2026 and
+# direct publishing entirely ~Jan 2027. Trusted publishing is the
+# recommended replacement and needs npm CLI >= 11.5.1 (hence the npm
+# upgrade step below; Node 22's bundled npm is 10.x).
 #
 # After the release, update server.json's mcpb entry: set the release-asset
 # URL and paste the fileSha256 printed in the "Build .mcpb bundle" step (also
@@ -47,11 +56,17 @@ jobs:
       - uses: pnpm/action-setup@v4
         # version comes from the root package.json "packageManager" field
 
+      # Per the npm trusted-publishing docs: registry-url stays (their
+      # example includes it; npm >= 11.5.1 prefers OIDC over the .npmrc
+      # token placeholder), and no dependency caching in release builds.
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: pnpm
+          node-version: 22 # trusted publishing needs Node >= 22.14
           registry-url: https://registry.npmjs.org
+
+      # Trusted publishing (OIDC) requires npm >= 11.5.1; Node 22 bundles 10.x.
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@latest && npm --version
 
       - name: Install
         run: pnpm install --frozen-lockfile || pnpm install
@@ -77,11 +92,12 @@ jobs:
           node scripts/build-mcpb.mjs --out release-artifacts
           sha256sum release-artifacts/*.mcpb | tee release-artifacts/mcpb-sha256.txt
 
-      # Everything is built; publishing starts here.
+      # Everything is built; publishing starts here. No token: the trusted
+      # publisher configured on npmjs.com exchanges this job's OIDC identity
+      # for a short-lived publish credential. Provenance is generated
+      # automatically with trusted publishing — no --provenance flag needed.
       - name: Publish to npm
-        run: npm publish release-artifacts/*.tgz --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish release-artifacts/*.tgz --access public
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
