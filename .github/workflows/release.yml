@@ -69,8 +69,22 @@ jobs:
           node-version: 22 # trusted publishing needs Node >= 22.14
 
       # Trusted publishing (OIDC) requires npm >= 11.5.1; Node 22 bundles 10.x.
-      - name: Upgrade npm for trusted publishing
-        run: npm install -g npm@latest && npm --version
+      # Pin the 11.x line: npm 12.0.1 (days old at time of writing) failed
+      # to attempt the OIDC exchange at all (ENEEDAUTH with no OIDC
+      # activity in http logs); 11.x is the battle-tested trusted-publishing
+      # line. Revisit the pin once npm 12 stabilizes.
+      - name: Install npm 11 for trusted publishing
+        run: npm install -g npm@11 && npm --version
+
+      # Fail with a real diagnostic if GitHub didn't grant OIDC (org policy
+      # can restrict id-token even with permissions set).
+      - name: Assert OIDC token is available
+        run: |
+          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then
+            echo "::error::ACTIONS_ID_TOKEN_REQUEST_URL is empty — id-token: write not granted (org policy?)" >&2
+            exit 1
+          fi
+          echo "OIDC request URL present.
 
       - name: Install
         run: pnpm install --frozen-lockfile || pnpm install
@@ -100,12 +114,22 @@ jobs:
       # publisher configured on npmjs.com exchanges this job's OIDC identity
       # for a short-lived publish credential. Provenance is generated
       # automatically with trusted publishing — no --provenance flag needed.
+      #
+      # Publish from an EXTRACTED DIRECTORY, not the tarball: every working
+      # trusted-publishing example publishes a directory, and tarball specs
+      # went ENEEDAUTH on npm 12 without ever attempting OIDC. The extracted
+      # tree is byte-identical to the tarball (which still ships on the
+      # GitHub Release). scripts + devDependencies are stripped in staging:
+      # prepack already ran during pnpm pack (re-running would fail without
+      # devDeps), and the workspace devDeps were rewritten to versions that
+      # don't exist on the public registry.
       - name: Publish to npm
-        # The ./ prefix is load-bearing: npm 12 parses a bare
-        # "release-artifacts/x.tgz" as a github:owner/repo git shorthand and
-        # its new --allow-git=none default refuses it (EALLOWGIT). A leading
-        # ./ disambiguates to a local file path.
-        run: npm publish ./release-artifacts/*.tgz --access public
+        run: |
+          mkdir -p publish-staging
+          tar -xzf ./release-artifacts/*.tgz -C publish-staging
+          cd publish-staging/package
+          npm pkg delete scripts devDependencies
+          npm publish --access public --loglevel http
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
