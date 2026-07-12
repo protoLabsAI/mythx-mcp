@@ -10,13 +10,19 @@ import type {
   ISessionManager,
   IWorldPackManager,
   IEventBus,
+  SessionState,
+  Character,
 } from "@mythxengine/types";
+import { createEmptySession } from "@mythxengine/types";
+import { getDefaultRulesContext } from "@mythxengine/engine";
 import {
   toMCPTool,
   toMCPTools,
   createMCPRegistry,
   type AnySharedTool,
 } from "../adapters/mcp-adapter.js";
+import { startCombatTool } from "../combat/start-combat.js";
+import { takeRestTool } from "../rest/take-rest.js";
 
 // Mock implementations
 const mockSessionManager: ISessionManager = {
@@ -157,6 +163,121 @@ describe("toMCPTools", () => {
     expect(mcpTools).toHaveLength(2);
     expect(mcpTools[0].name).toBe("tool1");
     expect(mcpTools[1].name).toBe("tool2");
+  });
+});
+
+describe("gate execution", () => {
+  it("runs the gate after schema validation; denial short-circuits with the web transport's denied shape", async () => {
+    const gateSpy = vi.fn().mockResolvedValue({ allow: false, reason: "not now" });
+    const handlerSpy = vi.fn().mockResolvedValue({ result: "should not run" });
+    const gatedTool: AnySharedTool = {
+      name: "gated_tool",
+      description: "A tool with a denying gate",
+      inputSchema,
+      gate: gateSpy,
+      handler: handlerSpy,
+    };
+
+    const mcpTool = toMCPTools([gatedTool], mockContext)[0];
+    const result = await mcpTool.handler({ name: "test" });
+
+    // Same shape apps/web/src/lib/tool-adapter.ts returns on denial.
+    expect(result).toEqual({ status: "denied", reason: "not now" });
+    expect(gateSpy).toHaveBeenCalledWith({ name: "test" }, mockContext);
+    expect(handlerSpy).not.toHaveBeenCalled();
+  });
+
+  it("proceeds to the handler when the gate allows", async () => {
+    const gatedTool: AnySharedTool = {
+      name: "gated_tool",
+      description: "A tool with an allowing gate",
+      inputSchema,
+      gate: vi.fn().mockReturnValue({ allow: true }),
+      handler: async (input) => ({ result: inputSchema.parse(input).name }),
+    };
+
+    const mcpTool = toMCPTool(gatedTool as SharedToolDefinition, mockContext);
+    const result = await mcpTool.handler({ name: "ok" });
+    expect(result).toEqual({ result: "ok" });
+  });
+});
+
+describe("gate enforcement over MCP with real tools (take_rest mid-combat)", () => {
+  // Regression for the demonstrated bypass: over MCP, take_rest used to
+  // succeed mid-combat because its only combat prohibition lives in its
+  // gate, and the MCP adapter ran schema → handler only.
+  function createHero(): Character {
+    return {
+      id: "hero",
+      name: "Hero",
+      archetypeId: "warrior",
+      hp: { current: 12, max: 12 },
+      abilities: { STR: 3, AGI: 2, WIT: 0, CON: 2 },
+      skills: [{ id: "combat", name: "Combat", ability: "STR", bonus: 2, description: "Fighting" }],
+      specialAbilities: [],
+      equipment: { weapons: ["Sword"], armor: null, gear: [] },
+      conditions: [],
+      flags: [],
+      personality: [],
+      background: "A test hero",
+      psychology: { fears: [], goals: [], ambitions: [], bonds: [], flaws: [] },
+      stress: { current: 0, max: 9 },
+    };
+  }
+
+  function createInMemoryContext(session: SessionState): ToolContext {
+    const sessions = new Map<string, SessionState>([[session.metadata.id, session]]);
+    const sessionManager: ISessionManager = {
+      get: async (id) => sessions.get(id) ?? null,
+      getOrCreate: async (id) => sessions.get(id)!,
+      save: async (state) => {
+        sessions.set(state.metadata.id, state);
+      },
+      delete: async () => {},
+      list: async () => Array.from(sessions.keys()),
+    };
+    return {
+      sessions: sessionManager,
+      worldPacks: mockWorldPackManager,
+      getRules: async () => getDefaultRulesContext(),
+      eventBus: mockEventBus,
+      // No `loadedSkills` — like the real MCP server context. The
+      // requireSkill half of take_rest's gate passes through; only the
+      // combat-active game invariant enforces.
+    };
+  }
+
+  it("denies take_rest while combat is active, allows it otherwise", async () => {
+    const session = createEmptySession("gate-rest-session", "Gate Rest Test");
+    session.characters.hero = createHero();
+    const ctx = createInMemoryContext(session);
+
+    const startCombat = toMCPTool(startCombatTool, ctx);
+    const takeRest = toMCPTool(takeRestTool, ctx);
+
+    // Control: with no combat, the gate allows and the rest resolves.
+    const restBefore = (await takeRest.handler({
+      sessionId: "gate-rest-session",
+      restType: "short",
+    })) as { status: string };
+    expect(restBefore.status).toBe("ok");
+
+    // Start combat via the real tool through the MCP adapter.
+    await startCombat.handler({
+      sessionId: "gate-rest-session",
+      characterIds: ["hero"],
+      enemies: [{ name: "Goblin" }],
+    });
+
+    // Mid-combat, the gate must short-circuit with the denied shape.
+    const denied = await takeRest.handler({
+      sessionId: "gate-rest-session",
+      restType: "short",
+    });
+    expect(denied).toEqual({
+      status: "denied",
+      reason: expect.stringContaining("Combat is still active"),
+    });
   });
 });
 

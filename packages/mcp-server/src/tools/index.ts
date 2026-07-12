@@ -13,6 +13,13 @@ import { worldpackTools } from "./worldpack/index.js";
 import { timeTools } from "./time.js";
 import { playerTools } from "./players.js";
 import { turnTools } from "./turns.js";
+import { stressTools } from "./stress.js";
+import { lookupTools } from "./lookup.js";
+import { locationTools } from "./location.js";
+import { shopTools } from "./shop.js";
+import { restTools } from "./rest.js";
+import { dialogueTools } from "./dialogue.js";
+import { inventoryTools } from "./inventory.js";
 import { clockTools } from "./clocks.js";
 import { leadTools } from "./leads.js";
 import { relationshipTools } from "./relationships.js";
@@ -37,6 +44,13 @@ export const allTools = [
   ...timeTools,
   ...playerTools,
   ...turnTools,
+  ...stressTools,
+  ...lookupTools,
+  ...locationTools,
+  ...shopTools,
+  ...restTools,
+  ...dialogueTools,
+  ...inventoryTools,
   ...clockTools,
   ...leadTools,
   ...relationshipTools,
@@ -78,6 +92,13 @@ export { worldpackTools } from "./worldpack/index.js";
 export { timeTools } from "./time.js";
 export { playerTools } from "./players.js";
 export { turnTools } from "./turns.js";
+export { stressTools } from "./stress.js";
+export { lookupTools } from "./lookup.js";
+export { locationTools } from "./location.js";
+export { shopTools } from "./shop.js";
+export { restTools } from "./rest.js";
+export { dialogueTools } from "./dialogue.js";
+export { inventoryTools } from "./inventory.js";
 export { clockTools } from "./clocks.js";
 export { leadTools } from "./leads.js";
 export { relationshipTools } from "./relationships.js";

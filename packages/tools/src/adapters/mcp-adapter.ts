@@ -5,7 +5,12 @@
  */
 
 import { z } from "zod";
-import type { MCPToolEntry, SharedToolDefinition, ToolContext } from "@mythxengine/types";
+import type {
+  GateResult,
+  MCPToolEntry,
+  SharedToolDefinition,
+  ToolContext,
+} from "@mythxengine/types";
 import { zodToJsonSchema } from "./zod-to-json.js";
 
 /**
@@ -18,6 +23,13 @@ export interface AnySharedTool {
   inputSchema: z.ZodTypeAny;
   handler: (input: unknown, ctx: ToolContext) => Promise<unknown>;
   emits?: string[];
+  /**
+   * Optional pre-execution gate (mirrors cc-2.18 wrappedCanUseTool).
+   * Runs after schema validation and before the handler. Denials
+   * surface as `{ status: "denied", reason }` so the LLM gets a
+   * structured tool result and can self-correct.
+   */
+  gate?: (input: unknown, ctx: ToolContext) => Promise<GateResult> | GateResult;
 }
 
 /**
@@ -37,6 +49,30 @@ export function toMCPTool<TInput extends z.ZodTypeAny, TOutput>(
     inputSchema: zodToJsonSchema(tool.inputSchema),
     handler: async (args: unknown) => {
       const input = tool.inputSchema.parse(args);
+      // Lifecycle: schema → gate → handler (subset of the web
+      // adapter's schema → gate → preTool → handler → postTool in
+      // apps/web/src/lib/tool-adapter.ts). Gates enforce game-mechanic
+      // invariants (e.g. take_rest refuses while combat is active) and
+      // must run on every transport — without this, MCP clients bypass
+      // rules the chat surface enforces.
+      //
+      // Skill-prerequisite gates built on `requireSkill` deliberately
+      // pass through here: they allow when `ctx.loadedSkills` is
+      // undefined (see packages/tools/src/skills/load-skill.ts), and
+      // the MCP context never sets it. So MCP clients are NOT forced
+      // to call load_skill — only real game-state invariants enforce.
+      //
+      // preTool/postTool are intentionally NOT wired: the only postTool
+      // in the codebase is load_skill's `ctx.loadedSkills` mutation,
+      // which is chat-session-scoped by design and meaningless over
+      // MCP (no loadedSkills in this context). Wire them here only if
+      // a transport-agnostic hook ever appears.
+      if (tool.gate) {
+        const decision = await Promise.resolve(tool.gate(input, ctx));
+        if (!decision.allow) {
+          return { status: "denied", reason: decision.reason };
+        }
+      }
       return tool.handler(input, ctx);
     },
   };
@@ -53,15 +89,9 @@ export function toMCPTool<TInput extends z.ZodTypeAny, TOutput>(
  * @returns Array of MCPToolEntry for MCP server registration
  */
 export function toMCPTools(tools: readonly AnySharedTool[], ctx: ToolContext): MCPToolEntry[] {
-  return tools.map((t) => ({
-    name: t.name,
-    description: t.description,
-    inputSchema: zodToJsonSchema(t.inputSchema),
-    handler: async (args: unknown) => {
-      const input = t.inputSchema.parse(args);
-      return t.handler(input, ctx);
-    },
-  }));
+  // Delegate to toMCPTool so the schema → gate → handler lifecycle
+  // lives in exactly one place.
+  return tools.map((t) => toMCPTool(t, ctx));
 }
 
 /**

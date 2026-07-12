@@ -13,7 +13,7 @@ import { createResourceHandler } from "./resources/index.js";
 import { importBundledPacks } from "./state/bundled-packs.js";
 
 const SERVER_NAME = "mythxengine";
-const SERVER_VERSION = "0.2.1";
+const SERVER_VERSION = "0.3.0";
 
 async function main() {
   // First-run: import any bundled packs not yet present in the user's db.

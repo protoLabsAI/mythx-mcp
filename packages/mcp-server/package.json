@@ -1,6 +1,6 @@
 {
   "name": "@mythxengine/mcp-server",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": false,
   "description": "MythxEngine MCP server — tabletop RPG game mechanics over the Model Context Protocol: dice, five-tier outcomes, FitD-style stress, combat tracking, clocks, investigations, world generation, and four bundled starter worlds.",
   "keywords": [
