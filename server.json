@@ -1,9 +1,9 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.protolabsai/mythxengine",
+  "name": "io.github.protoLabsAI/mythxengine",
   "title": "MythxEngine",
   "description": "Tabletop RPG engine over MCP: dice, combat, stress, clocks, world generation, four bundled worlds",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "websiteUrl": "https://mythxengine.com",
   "repository": {
     "url": "https://github.com/protoLabsAI/mythx-mcp",
@@ -14,7 +14,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@mythxengine/mcp-server",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "transport": {
         "type": "stdio"
       },
@@ -29,9 +29,9 @@
     },
     {
       "registryType": "mcpb",
-      "identifier": "https://github.com/protoLabsAI/mythx-mcp/releases/download/v0.2.0/mythxengine-0.2.0.mcpb",
-      "version": "0.2.0",
-      "fileSha256": "bce7a0a4b00f99677b35eab2c56780ce316f85e76f511aeaebd3bc8e71960070",
+      "identifier": "https://github.com/protoLabsAI/mythx-mcp/releases/download/v0.2.1/mythxengine-0.2.1.mcpb",
+      "version": "0.2.1",
+      "fileSha256": "REPLACE_WITH_SHA256_FROM_RELEASE",
       "transport": {
         "type": "stdio"
       }

@@ -1,6 +1,6 @@
 {
   "name": "@mythxengine/mcp-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "description": "MythxEngine MCP server — tabletop RPG game mechanics over the Model Context Protocol: dice, five-tier outcomes, FitD-style stress, combat tracking, clocks, investigations, world generation, and four bundled starter worlds.",
   "keywords": [
@@ -20,7 +20,7 @@
     "url": "git+https://github.com/protoLabsAI/mythx-mcp.git",
     "directory": "packages/mcp-server"
   },
-  "mcpName": "io.github.protolabsai/mythxengine",
+  "mcpName": "io.github.protoLabsAI/mythxengine",
   "type": "module",
   "engines": {
     "node": ">=22.13"
