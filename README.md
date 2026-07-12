@@ -102,8 +102,8 @@ That's the loop: fiction in, mechanics out, consequences on clocks.
 
 This repo is the engine. **MythxEngine Desktop** is the game: a visual
 frame-based play surface, scene imagery, generated world books, and
-polish — $29 lifetime at
-[mythxengine.com/pricing](https://mythxengine.com/pricing).
+polish. Follow along and get notified when it ships at
+[mythxengine.com](https://mythxengine.com).
 
 ## Development
 
