@@ -56,13 +56,17 @@ jobs:
       - uses: pnpm/action-setup@v4
         # version comes from the root package.json "packageManager" field
 
-      # Per the npm trusted-publishing docs: registry-url stays (their
-      # example includes it; npm >= 11.5.1 prefers OIDC over the .npmrc
-      # token placeholder), and no dependency caching in release builds.
+      # NO registry-url here — this is load-bearing. setup-node's
+      # registry-url writes an .npmrc _authToken line and exports a literal
+      # placeholder NODE_AUTH_TOKEN; npm 12 then authenticates with the
+      # garbage placeholder instead of attempting the OIDC
+      # trusted-publishing exchange, and the PUT fails with a misleading
+      # E404 (observed on the v0.2.0 run). With a clean .npmrc, npm falls
+      # through to OIDC. The default registry is npmjs.org anyway. No
+      # dependency caching in release builds per the npm docs.
       - uses: actions/setup-node@v4
         with:
           node-version: 22 # trusted publishing needs Node >= 22.14
-          registry-url: https://registry.npmjs.org
 
       # Trusted publishing (OIDC) requires npm >= 11.5.1; Node 22 bundles 10.x.
       - name: Upgrade npm for trusted publishing
