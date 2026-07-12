@@ -97,7 +97,11 @@ jobs:
       # for a short-lived publish credential. Provenance is generated
       # automatically with trusted publishing — no --provenance flag needed.
       - name: Publish to npm
-        run: npm publish release-artifacts/*.tgz --access public
+        # The ./ prefix is load-bearing: npm 12 parses a bare
+        # "release-artifacts/x.tgz" as a github:owner/repo git shorthand and
+        # its new --allow-git=none default refuses it (EALLOWGIT). A leading
+        # ./ disambiguates to a local file path.
+        run: npm publish ./release-artifacts/*.tgz --access public
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
