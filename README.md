@@ -97,7 +97,21 @@ That's the loop: fiction in, mechanics out, consequences on clocks.
 | `packages/tools` / `prompts`             | Transport-agnostic tool implementations + runtime GM skills        |
 | `world-builder/`                         | The `rpg` Claude Code plugin (skills, agents, hooks)               |
 | `agent-kit/`                             | Portable GM system prompt + operating manual for **any** agent     |
+| `docs/`                                  | The [rulebook](./docs/RULEBOOK.md) + [how the engine works](./docs/engine.md) |
 | 4 bundled worlds                         | ~13 MB of NPCs, factions, locations, situations, arcs — the demo   |
+
+## Rules & docs
+
+- **[docs/RULEBOOK.md](./docs/RULEBOOK.md)** — the complete rules, all 12
+  chapters (outcomes, position & effect, tests, stress, combat, conditions,
+  gear, time & clocks, GM moves). Generated from `packages/rulebook`, the same
+  source the `lookup_rule` and `generate_rulebook` tools serve — so it never
+  drifts from the engine.
+- **[docs/engine.md](./docs/engine.md)** — how the engine works: the five-tier
+  outcome system, position & effect, stress, deterministic RNG, and how the
+  packages fit together.
+- **[agent-kit/](./agent-kit/)** — a portable GM system prompt and operating
+  manual for running a game with any agent.
 
 ## Want the full experience?
 
