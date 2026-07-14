@@ -77,9 +77,9 @@ export const testsChapter: Chapter = {
               caption: "Default difficulty levels",
               headers: ["Name", "Target"],
               rows: [
-                ["`easy`", "10"],
+                ["`easy`", "8"],
                 ["`standard`", "12"],
-                ["`hard`", "15"],
+                ["`hard`", "16"],
                 ["`extreme`", "20"],
               ],
             },
@@ -117,9 +117,9 @@ export const testsChapter: Chapter = {
           ],
           numbers: [
             { name: "Default test die", value: "d20", source: "engine/rules/context.getTestDice" },
-            { name: "Easy difficulty", value: 10, source: "BASE_DIFFICULTIES.easy.target" },
+            { name: "Easy difficulty", value: 8, source: "BASE_DIFFICULTIES.easy.target" },
             { name: "Standard difficulty", value: 12, source: "BASE_DIFFICULTIES.standard.target" },
-            { name: "Hard difficulty", value: 15, source: "BASE_DIFFICULTIES.hard.target" },
+            { name: "Hard difficulty", value: 16, source: "BASE_DIFFICULTIES.hard.target" },
             { name: "Extreme difficulty", value: 20, source: "BASE_DIFFICULTIES.extreme.target" },
           ],
           canonicalSource: [

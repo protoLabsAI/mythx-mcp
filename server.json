@@ -31,11 +31,11 @@
       "registryType": "mcpb",
       "identifier": "https://github.com/protoLabsAI/mythx-mcp/releases/download/v0.3.0/mythxengine-0.3.0.mcpb",
       "version": "0.3.0",
-      "fileSha256": "15c6230f252508e90ebf26fb7cec08a0a1d7c6e98e919ded1ca3f8e43de1b574",
+      "fileSha256": "75f4b5a77fc63bf2d945f2de1c0349ebcd2196166c41c1a1e02710c22bea75c8",
       "transport": {
         "type": "stdio"
       }
     }
   ],
-  "_comment": "fileSha256 fill-in: after the release workflow runs, copy the hash from the mcpb-sha256.txt release asset (printed by the 'Build .mcpb bundle' step in .github/workflows/release.yml), update the identifier URL to the tagged release, then publish with mcp-publisher (npm ownership is verified via the mcpName field in packages/mcp-server/package.json). The hash is per-release: it MUST be refreshed on every version bump — until then the value below still belongs to the previous release's .mcpb."
+  "_comment": "fileSha256 fill-in: after the release workflow runs, copy the hash from the mcpb-sha256.txt release asset (printed by the 'Build .mcpb bundle' step in .github/workflows/release.yml), update the identifier URL to the tagged release, then publish with mcp-publisher (npm ownership is verified via the mcpName field in packages/mcp-server/package.json). The hash is per-release: it MUST be refreshed on every version bump \u2014 until then the value below still belongs to the previous release's .mcpb."
 }

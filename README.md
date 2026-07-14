@@ -96,6 +96,7 @@ That's the loop: fiction in, mechanics out, consequences on clocks.
 | `packages/storage`                       | SQLite persistence (`node:sqlite`, zero native deps)               |
 | `packages/tools` / `prompts`             | Transport-agnostic tool implementations + runtime GM skills        |
 | `world-builder/`                         | The `rpg` Claude Code plugin (skills, agents, hooks)               |
+| `agent-kit/`                             | Portable GM system prompt + operating manual for **any** agent     |
 | 4 bundled worlds                         | ~13 MB of NPCs, factions, locations, situations, arcs — the demo   |
 
 ## Want the full experience?
