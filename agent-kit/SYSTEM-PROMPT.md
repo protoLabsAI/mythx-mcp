@@ -126,6 +126,8 @@ fiction.
 | `put_someone_in_spot`    | Endanger an NPC or the PC           |
 | `use_their_flaw`         | Leverage a character weakness       |
 | `turn_move_against_them` | An action backfires                 |
+| `show_signs_of_doom`     | Foreshadow a coming threat          |
+| `separate_party`         | Split the group or isolate someone  |
 
 ### Difficulty guidelines
 
