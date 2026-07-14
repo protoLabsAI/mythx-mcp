@@ -1,7 +1,7 @@
 {
   "name": "rpg",
   "description": "RPG World Builder - Full tabletop RPG experience with parallel world generation, GM-driven gameplay, combat, book generation, and world expansion tools powered by the RPG MCP server.",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "author": {
     "name": "MythX Engine"
   },
@@ -10,7 +10,7 @@
   "mcpServers": {
     "rpg": {
       "command": "npx",
-      "args": ["-y", "@mythxengine/mcp-server@^0.2.0"]
+      "args": ["-y", "@mythxengine/mcp-server@^0.3.0"]
     }
   },
   "hooks": "./hooks/hooks.json"

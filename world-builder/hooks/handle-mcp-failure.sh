@@ -28,7 +28,7 @@ CONTENT=$(echo "$INPUT" | jq -r '.tool_response.content // ""' 2>/dev/null || tr
 
 # Classify the failure
 if echo "$CONTENT" | grep -qiE '(connection refused|ECONNREFUSED|server.*not.*running|unreachable|ENOTFOUND|ETIMEDOUT)'; then
-  REASON="MCP server appears to be unreachable (connection refused or timed out). Recovery steps: (1) Check that the MCP server can start: \`npx -y @mythxengine/mcp-server@^0.2.0\` (same pinned spec as plugin.json). (2) Verify RPG_MCP_DATA_DIR is set if using a custom data directory (default: ~/.mythxengine/data). (3) Restart the server and retry the tool call."
+  REASON="MCP server appears to be unreachable (connection refused or timed out). Recovery steps: (1) Check that the MCP server can start: \`npx -y @mythxengine/mcp-server@^0.3.0\` (same pinned spec as plugin.json). (2) Verify RPG_MCP_DATA_DIR is set if using a custom data directory (default: ~/.mythxengine/data). (3) Restart the server and retry the tool call."
 
 elif echo "$CONTENT" | grep -qiE '(401|403|unauthorized|forbidden|invalid.*key|invalid.*token|auth.*fail)'; then
   REASON="MCP authentication failure. Recovery steps: (1) Verify your API keys / credentials in environment variables. (2) Check the rpg entry under mcpServers in the plugin's plugin.json launches the right server. (3) Restart Claude Code after updating credentials."

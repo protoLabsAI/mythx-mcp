@@ -42,7 +42,7 @@ claude --plugin-dir /path/to/world-builder
 /rpg:play
 ```
 
-The plugin launches the RPG MCP server automatically via `npx -y @mythxengine/mcp-server@^0.2.0` (requires Node >= 22.13 — no build step, no checkout). The version is pinned in `plugin.json` so npx can never resolve the retired pre-SQLite `0.1.x` snapshots that exist on npm; bump the pin alongside server releases. Game data lives in `~/.mythxengine/data`. Play from any directory on your system.
+The plugin launches the RPG MCP server automatically via `npx -y @mythxengine/mcp-server@^0.3.0` (requires Node >= 22.13 — no build step, no checkout). The version is pinned in `plugin.json` so npx can never resolve the retired pre-SQLite `0.1.x` snapshots that exist on npm; bump the pin alongside server releases. Game data lives in `~/.mythxengine/data`. Play from any directory on your system.
 
 ## What's Included
 
